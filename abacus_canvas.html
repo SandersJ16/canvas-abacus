@@ -13,18 +13,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
         <script src="abacus.js"></script>
         <script>
-            var abacus = new Abacus("myCanvas",{number_of_bars:13});
+            var abacus = new Abacus("myCanvas",{number_of_bars:8,width:"50%",height:"300px"});
             abacus.drawFrame();
             abacus.defaultSetup();
-            //abacus.pushUpLower(10);
-            //abacus.pushUpUpper(2);
-            //abacus.setUpNumber(321);
 
-            //function setAb() {
-            //     abacus.setUpNumber(document.getElementById("ab_num").innerHTML);
-            //}
-            $(document).ready(function(){
-                $("#ab_num").change(function(){
+            $(document).ready(function() {
+                $("#ab_num").change(function() {
                     console.log(document.getElementById("ab_num").value);
                     //document.getElementById("error_log").innerHTML = $("#ab_num").html();
                     abacus.setUpNumber(document.getElementById("ab_num").value);
