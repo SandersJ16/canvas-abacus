@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Abaucus</title>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="800" height="400" style="border:1px solid #c3c3c3;">
+            Your browser is not smart enough to use an abacus.
+        </canvas>
+        <p id="error_log"></p>
+        Number: <input id="ab_num" type="number" name="ab_num" value="0" ><br>
+
+        <!--script src="jquery-2.2.3.js" /-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="abacus.js"></script>
+        <script>
+            var abacus = new Abacus("myCanvas",{number_of_bars:13});
+            abacus.drawFrame();
+            abacus.defaultSetup();
+            //abacus.pushUpLower(10);
+            //abacus.pushUpUpper(2);
+            //abacus.setUpNumber(321);
+
+            //function setAb() {
+            //     abacus.setUpNumber(document.getElementById("ab_num").innerHTML);
+            //}
+            $(document).ready(function(){
+                $("#ab_num").change(function(){
+                    console.log(document.getElementById("ab_num").value);
+                    //document.getElementById("error_log").innerHTML = $("#ab_num").html();
+                    abacus.setUpNumber(document.getElementById("ab_num").value);
+                });
+            });
+        </script>
+    </body>
+</html>
