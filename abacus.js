@@ -1,5 +1,5 @@
 class Abacus {
-    constructor(canvas_id, {number_of_bars=10,frame_color="saddlebrown",bar_color="grey",slider_color="green",height="100%"} = {}) {
+    constructor(canvas_id, {number_of_bars=10,frame_color="saddlebrown",bar_color="grey",slider_color="green",width="100%",height="100%"} = {}) {
         this.canvas = document.getElementById(canvas_id);
 
         this.setColors(frame_color, bar_color, slider_color);
@@ -12,24 +12,47 @@ class Abacus {
         this.y_space_from_border = 10;//canvas_height * 0.2
 
         this.frame_height = 30;//canvas_height * 0.15
-        this.frame_width = this.canvas_width - this.x_space_from_border * 2;
+        this.setWidth(width);
+        //this.frame_width = this.canvas_width - this.x_space_from_border * 2;
 
         this.number_of_bars = number_of_bars;
         this.space_between_bars = 3;
         this.bar_width = 2;
 
         this.bar_y_coord = this.y_space_from_border;
-        this.bar_height = this.canvas_height - 20;//(3 * this.y_space_from_border) - (2 * this.frame_height);
+        this.setHeight(height);
+        //this.bar_height = this.canvas_height - (2 * this.y_space_from_border);
 
         this.clearAbacus()
 
-        this.slider_width = ((this.canvas_width - (this.x_space_from_border * 2)) - (this.space_between_bars * (this.number_of_bars + 1))) / this.number_of_bars;
+        this.slider_width = (this.frame_width - (this.space_between_bars * (this.number_of_bars + 1))) / this.number_of_bars;
         this.top_frame_y_coord = this.y_space_from_border;
-        this.mid_frame_y_coord = (this.canvas_height - (3 * this.y_space_from_border) - (2 * this.frame_height)) * 0.25 + this.frame_height + this.y_space_from_border;
-        this.bottom_frame_y_coord = this.canvas_height - 2 * this.y_space_from_border - this.frame_height;
+        //this.mid_frame_y_coord = (this.canvas_height - (3 * this.y_space_from_border) - (2 * this.frame_height)) * 0.25 + this.frame_height + this.y_space_from_border;
+        this.mid_frame_y_coord = (this.bar_height * 0.25) + this.y_space_from_border + (this.frame_height * 0.5);
+        //this.bottom_frame_y_coord = this.canvas_height - this.y_space_from_border - this.frame_height;
+        this.bottom_frame_y_coord = this.bar_height + this.y_space_from_border - this.frame_height;
     }
-    setHeight() {
-
+    stringLengthToNumber(string_length, percentage_of_length) {
+        var number_length;
+        string_length = string_length.replace(/^\s+|\s+$/g, '');
+        if (string_length.endsWith("%")) {
+            var percentage = string_length.slice(0, -1).replace(/^\s+|\s+$/g, '');
+            number_length = percentage_of_length * (percentage/ 100);
+        } else if (string_length.endsWith("px")) {
+            var pixels = string_length.slice(0, -2).replace(/^\s+|\s+$/g, '');
+            number_length = pixels;
+        } else {
+            throw new Exception();
+        }
+        return number_length;
+    }
+    setHeight(height) {
+        this.bar_height = this.stringLengthToNumber(height, this.canvas_height);
+        this.bar_height -= this.y_space_from_border * 2;
+    }
+    setWidth(width) {
+        this.frame_width = this.stringLengthToNumber(width, this.canvas_width);
+        this.frame_width -= this.x_space_from_border * 2;
     }
     setColors(frame_color, bar_color, slider_color) {
         this.frame_color = frame_color;
@@ -52,7 +75,7 @@ class Abacus {
     }
     drawFrame() {
         this.drawFrameSlideBars();
-        //this.drawFrameCrossBars();
+        this.drawFrameCrossBars();
     }
     drawLowerSlider(bar, bottom = true) {
         this.ctx.fillStyle = this.slider_color;
