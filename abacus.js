@@ -78,37 +78,45 @@ class Abacus {
         this.drawFrameCrossBars();
     }
     drawLowerSlider(bar, bottom = true) {
-        this.ctx.fillStyle = this.slider_color;
-        var slider_height = this.slider_width * 0.25;
-        if (bar > this.number_of_bars) {
-            console.log("Tried to draw slider on non-existant bar");
-        } else {
-            var slider_x_coord = this.x_space_from_border + this.space_between_bars + ((bar - 1) * (this.slider_width + this.space_between_bars))
-            var slider_y_coord;
-            if (bottom) {
-                slider_y_coord = (this.bottom_frame_y_coord - slider_height) - (this.sliders_on_lower_bar[bar -1][bottom] * slider_height);
-            } else {
-                slider_y_coord = (this.mid_frame_y_coord + this.frame_height) + (this.sliders_on_lower_bar[bar - 1][bottom] * slider_height);
-            }
-            this.ctx.fillRect(slider_x_coord, slider_y_coord, this.slider_width, slider_height);
-            ++this.sliders_on_lower_bar[bar - 1][bottom];
-        }
+        this.drawSlider(bar, bottom, true);
     }
     drawUpperSlider(bar, bottom = true) {
-        this.ctx.fillStyle = "green";
+        this.drawSlider(bar, bottom, false);
+    }
+    drawSlider(bar, bottom = true, lower = true) {
+        this.ctx.fillStyle = "black";
         var slider_height = this.slider_width * 0.25;
         if (bar > this.number_of_bars) {
             console.log("Tried to draw slider on non-existant bar");
         } else {
-            var slider_x_coord = this.x_space_from_border + this.space_between_bars + ((bar - 1) * (this.slider_width + this.space_between_bars))
+            var slider_x_coord = this.x_space_from_border + this.space_between_bars + ((bar - 1) * (this.slider_width + this.space_between_bars));
             var slider_y_coord;
-            if (bottom) {
-                slider_y_coord = (this.mid_frame_y_coord - slider_height) - (this.sliders_on_upper_bar[bar -1][bottom] * slider_height);
+            var slider_counter;
+            var lower_frame_coordinate;
+            var upper_frame_coordinate;
+            if (lower) {
+                slider_counter = this.sliders_on_lower_bar;
+                lower_frame_coordinate = this.bottom_frame_y_coord;
+                upper_frame_coordinate = this.mid_frame_y_coord;
             } else {
-                slider_y_coord = (this.top_frame_y_coord + this.frame_height) + (this.sliders_on_upper_bar[bar - 1][bottom] * slider_height);
+                slider_counter = this.sliders_on_upper_bar;
+                lower_frame_coordinate = this.mid_frame_y_coord;
+                upper_frame_coordinate = this.top_frame_y_coord;
             }
+
+            if (bottom) {
+                slider_y_coord = (lower_frame_coordinate - slider_height) - (slider_counter[bar -1][bottom] * slider_height);
+            } else {
+                slider_y_coord = (upper_frame_coordinate + this.frame_height) + (slider_counter[bar - 1][bottom] * slider_height);
+            }
+
             this.ctx.fillRect(slider_x_coord, slider_y_coord, this.slider_width, slider_height);
-            ++this.sliders_on_upper_bar[bar - 1][bottom];
+            this.ctx.fillStyle = this.slider_color;
+            var outline_width = 1;
+            this.ctx.fillRect(slider_x_coord + outline_width, slider_y_coord + outline_width, this.slider_width - outline_width * 2, slider_height - outline_width * 2);
+
+
+            ++slider_counter[bar - 1][bottom];
         }
     }
     drawLowerBar(bar, up, down) {
@@ -204,7 +212,7 @@ class Abacus {
         this.clearAbacus();
         this.drawFrame();
         var place = 1;
-        while (number * 10 > Math.pow(10, place)) {
+        while (number * 10 >= Math.pow(10, place)) {
             var lower_up;
             var current_bar = this.number_of_bars - place + 1;
             var place_value = Math.floor((number % (Math.pow(10, place))) / Math.pow(10, place - 1));
