@@ -1,5 +1,5 @@
 # canvas-abacus
-Javascript For creating an Abacus in an HTML5 Canvas
+Javascript For creating an Abacus in an HTML5 Canvas. This was made during a Stupid Hackathon
 
 This small library makes it easy to create an abacus in HTML5 Canvas and programatically change it. Getting started is easy, just create a canvas tag with an ID, then create a new abacus using that ID:
 ```html
